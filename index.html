@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c0f1f">
+<title>Anime Id</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+<style>
+:root{--bg:#0c0f1f;--glass:rgba(255,255,255,.07);--glass2:rgba(255,255,255,.13);--edge:rgba(255,255,255,.17);--text:#f4f5ff;--muted:#b3b9dd;--accent:#ffc15a;--ink:#2b1c00}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:400 16px/1.5 "Plus Jakarta Sans",system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#ambient{position:fixed;inset:-12%;z-index:-1;background:radial-gradient(60% 50% at 20% 15%,#2b3a8f 0,transparent 70%),radial-gradient(50% 45% at 85% 80%,#5a2a7a 0,transparent 70%) var(--bg);background-size:cover;background-position:center;filter:blur(64px) saturate(1.5) brightness(.6);transition:background-image .6s}
+#ambient.img{filter:blur(70px) saturate(1.6) brightness(.55);transform:scale(1.25)}
+.glass{background:var(--glass);backdrop-filter:blur(22px) saturate(1.5);-webkit-backdrop-filter:blur(22px) saturate(1.5);border:1px solid var(--edge);border-radius:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 12px 32px rgba(0,0,0,.28)}
+nav{position:sticky;top:10px;z-index:20;max-width:1120px;margin:10px auto 0;padding:8px 10px 8px 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;width:calc(100% - 20px)}
+.brand{font-weight:800;font-size:1.2rem;letter-spacing:-.02em}
+nav form{flex:1;min-width:180px;display:flex}
+input[type=search],input.f{width:100%;padding:11px 16px;border-radius:12px;border:1px solid var(--edge);background:rgba(0,0,0,.25);outline-offset:2px}
+::placeholder{color:#8f96c4}
+main{max-width:1120px;margin:0 auto;padding:18px 14px 80px}
+h1,h2{letter-spacing:-.02em;margin:0}
+.hero{padding:36px 4px 8px}.hero h1{font-size:clamp(2rem,6.5vw,3.4rem);line-height:1.06;font-weight:800;max-width:15ch}
+.hero p{color:var(--muted);margin:10px 0 0;max-width:46ch}
+.sec{margin-top:30px}.sec h2{font-size:1.1rem;margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip,.btn{padding:9px 14px;border-radius:12px;border:1px solid var(--edge);background:var(--glass);cursor:pointer;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.btn.main{background:var(--accent);color:var(--ink);border-color:transparent;font-weight:600}
+.chip:hover,.btn:hover{background:var(--glass2)}.btn.main:hover{background:#ffcd78}
+.btn[aria-disabled=true]{opacity:.4;pointer-events:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:20px 14px}
+.row{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}.row .item{flex:0 0 150px;scroll-snap-align:start}
+.pw{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:3/4;background:var(--glass)}
+.poster{width:100%;height:100%;object-fit:cover;display:block}
+.bar{position:absolute;left:8px;right:8px;bottom:8px;height:4px;border-radius:4px;background:rgba(255,255,255,.3)}.bar:after{content:"";position:absolute;inset:0 auto 0 0;width:var(--w);border-radius:4px;background:var(--accent)}
+.item h3{margin:8px 0 0;font-size:.92rem;line-height:1.3;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item p{margin:2px 0 0;font-size:.78rem;color:var(--muted)}
+.item:hover .pw{outline:2px solid var(--accent)}
+.status{color:var(--muted);padding:28px 4px}.error{color:#ffb7c5}
+.detail{display:flex;gap:20px;padding:20px;align-items:flex-end}.detail .pw{width:150px;flex:none}
+.detail h1{font-size:clamp(1.4rem,4.5vw,2.3rem);line-height:1.12}.detail p{color:var(--muted);margin:6px 0 14px}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.panel{padding:16px;margin-top:16px}
+.eps{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;margin-top:12px;max-height:60vh;overflow:auto}
+.ep{position:relative;padding:9px 6px;text-align:center;font-size:.85rem;border-radius:10px;border:1px solid var(--edge);background:var(--glass);overflow:hidden}
+.ep:hover{background:var(--glass2)}.ep.seen{opacity:.55}.ep.cur{background:var(--accent);color:var(--ink);border-color:transparent;font-weight:600;opacity:1}
+.ep i{position:absolute;left:0;bottom:0;height:3px;width:var(--w);background:var(--accent)}
+.wl{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}
+@media(max-width:900px){.wl{grid-template-columns:1fr}.detail{flex-direction:column;align-items:flex-start}}
+.player{position:relative;background:#000;border-radius:18px;overflow:hidden;aspect-ratio:16/9;border:1px solid var(--edge)}
+.player video{width:100%;height:100%;display:block;background:#000}
+.player:fullscreen{border-radius:0;aspect-ratio:auto}
+.ctl{position:absolute;left:10px;right:10px;bottom:10px;padding:8px 12px;display:flex;flex-direction:column;gap:6px;transition:opacity .25s}
+.player.idle .ctl{opacity:0;pointer-events:none}.player.idle{cursor:none}
+.cr{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.sp{flex:1}
+.ib{background:none;border:0;padding:6px 8px;border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.ib:hover{background:var(--glass2)}.ib svg{width:20px;height:20px}
+.ctl select{background:rgba(0,0,0,.35);border:1px solid var(--edge);border-radius:8px;padding:4px 6px;font-size:.8rem}
+.ctl select option{color:#000}
+input[type=range]{-webkit-appearance:none;appearance:none;background:none;margin:0;cursor:pointer;width:100%;height:16px}
+input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:5px;background:var(--tr,rgba(255,255,255,.25))}
+input[type=range]::-moz-range-track{height:5px;border-radius:5px;background:var(--tr,rgba(255,255,255,.25))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;margin-top:-4.5px;border-radius:50%;background:var(--accent);border:0}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);border:0}
+#vol{width:70px}
+.ov{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:20px;background:rgba(8,10,24,.6)}.ov.on{display:grid}.ov>div{padding:22px 26px}
+.tm{font-variant-numeric:tabular-nums;font-size:.82rem;color:var(--muted)}
+.meta{padding:16px 18px;margin-top:14px}.meta h1{font-size:1.2rem;line-height:1.3}.meta .acts{margin-top:12px}
+.tg{display:inline-flex;gap:8px;align-items:center;cursor:pointer;font-size:.9rem;color:var(--muted)}
+.links a{display:block;padding:9px 0;border-top:1px solid var(--edge);font-size:.9rem}.links a:hover{color:var(--accent)}
+.kbd{font-size:.78rem;color:var(--muted);margin-top:12px}
+.feat{display:flex;gap:28px;padding:24px;align-items:flex-end;min-height:340px}
+.feat .pw{width:210px;flex:none;box-shadow:0 22px 44px rgba(0,0,0,.5)}
+.hb{flex:1;min-width:0}.hb h1{font-size:clamp(1.7rem,5vw,3.1rem);line-height:1.07;font-weight:800;margin:10px 0 18px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tag{display:inline-block;padding:4px 12px;border-radius:20px;background:var(--accent);color:var(--ink);font-size:.8rem;font-weight:800}
+.thumbs{display:flex;gap:8px;margin-top:20px}.th{width:46px;aspect-ratio:3/4;border-radius:8px;overflow:hidden;border:2px solid transparent;opacity:.5;padding:0;background:none;cursor:pointer}.th.on{opacity:1;border-color:var(--accent)}.th img{width:100%;height:100%;object-fit:cover;display:block}
+.tabs{display:flex;gap:6px;padding:5px;width:fit-content;margin-bottom:18px;border-radius:14px}
+.tabs a{padding:8px 18px;border-radius:10px;font-weight:600;color:var(--muted)}.tabs a.on{background:var(--accent);color:var(--ink)}
+.bd{position:absolute;top:8px;left:8px;padding:2px 9px;border-radius:8px;font-size:.72rem;font-weight:600;background:rgba(10,12,28,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.item .pw{transition:transform .2s}.item:hover .pw{transform:translateY(-4px)}
+.sk{border-radius:14px;min-height:0;aspect-ratio:3/4;background:linear-gradient(100deg,var(--glass) 30%,var(--glass2) 50%,var(--glass) 70%) 0 0/200% 100%;animation:sh 1.3s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.more{display:flex;justify-content:center;margin-top:24px}
+.sec h2{font-size:1.25rem}
+.subs{position:absolute;left:5%;right:5%;bottom:var(--pos,8%);text-align:center;pointer-events:none;font-weight:600;line-height:1.4;font-size:calc(var(--fs,22) * 1px);transition:bottom .2s}
+.subs span{padding:2px 10px;border-radius:6px;background:rgba(10,12,28,var(--bga,.7));color:var(--fc,#fff);white-space:pre-line;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.player:not(.idle) .subs{bottom:calc(var(--pos,8%) + 92px)}
+.player:fullscreen .subs{font-size:calc(var(--fs,22) * 1.5px)}
+.player{--text:#f4f5ff;--muted:#b3b9dd;--glass:rgba(255,255,255,.07);--glass2:rgba(255,255,255,.13);--edge:rgba(255,255,255,.17);color:#f4f5ff}
+[data-theme=light]{--bg:#eef0fb;--glass:rgba(255,255,255,.6);--glass2:rgba(255,255,255,.85);--edge:rgba(30,36,90,.16);--text:#161a3d;--muted:#4f5683;--accent:#e8a21c}
+[data-theme=light] #ambient{filter:blur(70px) saturate(1.3) brightness(1.3)}
+[data-theme=light] input[type=search],[data-theme=light] input.f{background:rgba(255,255,255,.7)}
+[data-theme=light] .glass{box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 10px 26px rgba(40,50,120,.14)}
+.set{display:grid;gap:4px}.set h2{font-size:1.05rem;margin-bottom:6px}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--edge)}.srow:first-of-type{border-top:0}
+.srow select,.srow input[type=color]{background:var(--glass);border:1px solid var(--edge);border-radius:10px;padding:7px 10px;color:var(--text)}
+.srow input[type=color]{padding:2px;width:46px;height:34px}
+.srow input[type=range]{--tr:rgba(128,134,180,.45);width:170px}
+input[type=checkbox]{accent-color:var(--accent);width:20px;height:20px}
+select option{color:#000}
+.pv{position:relative;height:130px;border-radius:12px;margin:10px 0;background:linear-gradient(135deg,#1b2147,#3a2a5c);overflow:hidden}
+@media(max-width:700px){.feat{flex-direction:column;align-items:flex-start;min-height:0}.feat .pw{width:130px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="ambient"></div>
+<nav class="glass">
+  <a class="brand" href="#/">Anime Id</a>
+  <form id="sf"><input type="search" id="q" placeholder="Cari judul anime" aria-label="Cari judul anime" autocomplete="off"></form>
+  <a class="chip" href="#/settings">Pengaturan</a>
+</nav>
+<main id="app"></main>
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const enc = encodeURIComponent;
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const LS = {
+  get: (k, d) => { try { return JSON.parse(localStorage.getItem("kt:" + k)) ?? d; } catch { return d; } },
+  set: (k, v) => { try { localStorage.setItem("kt:" + k, JSON.stringify(v)); } catch {} },
+};
+const app = $("#app");
+const LANGS = [["id", "Indonesia"], ["en", "English"], ["ar", "Arab"], ["fr", "Perancis"], ["ja", "Jepang"]];
+const DEF = { theme: "dark", sub: "id", subSize: 22, subColor: "#ffffff", subBg: 70, subPos: 8, quality: "auto", autoplay: false, auto: true, skipIntro: false, speed: 1, vol: 1, hideHist: false };
+const cfg = () => ({ ...DEF, ...LS.get("cfg", {}) });
+let nav = 0, cleanup = null;
+const epCache = new Map();
+
+async function api(path, params) {
+  const r = await fetch(path + "?" + new URLSearchParams(params));
+  const j = await r.json();
+  if (!j.status) throw new Error(j.message || "Terjadi kesalahan.");
+  return j.result;
+}
+const episodes = async (u) => { if (!epCache.has(u)) epCache.set(u, await api("/api/episodes", { url: u })); return epCache.get(u); };
+const fail = (e) => `<p class="status error">Gagal memuat: ${esc(e.message)}. Periksa koneksi, lalu muat ulang halaman.</p>`;
+const prog = () => LS.get("p", {});
+const pct = (p) => (p && p.d ? Math.min(100, Math.round((p.t / p.d) * 100)) : 0);
+const isFav = (a) => LS.get("fav", []).some((f) => f.a === a);
+
+function ambient(src) {
+  const el = $("#ambient");
+  el.classList.toggle("img", !!src);
+  el.style.backgroundImage = src ? `url("${src}")` : "";
+}
+const wHref = (e, a, n, i) => `#/watch?u=${enc(e)}&a=${enc(a)}&n=${enc(n)}&i=${enc(i || "")}`;
+const aHref = (a, n, i) => `#/anime?u=${enc(a)}&n=${enc(n)}&i=${enc(i || "")}`;
+const yr = (t) => (t.match(/\((\d{4})\)\s*$/) || [])[1] || "";
+const nm = (t) => t.replace(/\s*\(\d{4}\)\s*$/, "");
+const card = (c) => { const y = yr(c.title); return `<a class="item" href="${c.href}"><div class="pw"><img class="poster" loading="lazy" src="${esc(c.img)}" alt="">${y ? `<span class="bd">${y}</span>` : ""}${c.pct ? `<i class="bar" style="--w:${c.pct}%"></i>` : ""}</div><h3>${esc(nm(c.title))}</h3>${c.sub ? `<p>${esc(c.sub)}</p>` : ""}</a>`; };
+
+$("#sf").onsubmit = (e) => { e.preventDefault(); const q = $("#q").value.trim(); if (q) location.hash = "#/?q=" + enc(q); };
+
+/* ---------- Beranda ---------- */
+const SECS = [["popular", "Populer"], ["season", "Musim baru"], ["movies", "Film"]];
+const bc = {};
+const browse = async (s, pg) => (bc[s + pg] ??= await api("/api/browse", { s, page: pg }));
+
+function feature(items, s) {
+  const el = $("#hero");
+  if (!items.length) return (el.innerHTML = "");
+  let k = 0, t;
+  const draw = () => {
+    const a = items[k]; ambient(a.thumbnail);
+    el.innerHTML = `<div class="feat glass"><div class="pw"><img class="poster" src="${esc(a.thumbnail)}" alt=""></div><div class="hb"><span class="tag">No. ${k + 1} ${esc(SECS.find((x) => x[0] === s)[1])}</span><h1>${esc(nm(a.title))}</h1>
+      <div class="acts"><a class="btn main" href="${aHref(a.url, a.title, a.thumbnail)}">Lihat episode</a></div>
+      <div class="thumbs">${items.map((x, j) => `<button class="th ${j === k ? "on" : ""}" data-k="${j}" aria-label="${esc(nm(x.title))}"><img src="${esc(x.thumbnail)}" alt=""></button>`).join("")}</div></div></div>`;
+    el.querySelectorAll(".th").forEach((b) => (b.onclick = () => { k = +b.dataset.k; draw(); reset(); }));
+  };
+  const reset = () => { clearInterval(t); t = setInterval(() => { k = (k + 1) % items.length; draw(); }, 7000); };
+  draw(); reset();
+  cleanup = () => clearInterval(t);
+}
+
+async function home(p, id) {
+  const q = p.get("q") || "", s = SECS.some((x) => x[0] === p.get("s")) ? p.get("s") : "popular";
+  const hist = cfg().hideHist ? [] : LS.get("hist", []), fav = LS.get("fav", []), rec = LS.get("q", []), P = prog();
+  const cd = (a) => card({ href: aHref(a.url, a.title, a.thumbnail), img: a.thumbnail, title: a.title });
+  $("#q").value = q;
+  if (q) {
+    ambient(hist[0]?.i);
+    LS.set("q", [q, ...rec.filter((x) => x !== q)].slice(0, 8));
+    app.innerHTML = `<h2 class="sec">Hasil untuk "${esc(q)}"</h2><div class="sec grid" id="gr">${'<div class="sk"></div>'.repeat(12)}</div>`;
+    try {
+      const list = await api("/api/search", { q });
+      if (id !== nav) return;
+      $("#gr").innerHTML = list.length ? list.map(cd).join("") : `<p class="status">Tidak ada hasil. Coba judul bahasa Inggris atau Romaji.</p>`;
+    } catch (e) { if (id === nav) app.innerHTML = fail(e); }
+    return;
+  }
+  app.innerHTML = `<section id="hero"><div class="feat glass sk"></div></section>
+    ${hist.length ? `<section class="sec"><h2>Lanjut nonton</h2><div class="row" style="margin-top:12px">${hist.slice(0, 12).map((h) => card({ href: wHref(h.e, h.a, h.n, h.i), img: h.i, title: h.n, sub: h.et, pct: pct(P[h.e]) })).join("")}</div></section>` : ""}
+    <section class="sec"><div class="tabs glass">${SECS.map((x) => `<a href="#/?s=${x[0]}" class="${x[0] === s ? "on" : ""}">${x[1]}</a>`).join("")}</div>
+      <div class="grid" id="gr">${'<div class="sk"></div>'.repeat(12)}</div><div class="more"><button class="btn" id="mb">Muat lebih banyak</button></div></section>
+    ${fav.length ? `<section class="sec"><h2>Favorit</h2><div class="grid" style="margin-top:12px">${fav.map((f) => card({ href: aHref(f.a, f.n, f.i), img: f.i, title: f.n })).join("")}</div></section>` : ""}
+    ${rec.length ? `<section class="sec"><h2>Pencarian terakhir</h2><div class="chips" style="margin-top:12px">${rec.map((r) => `<a class="chip" href="#/?q=${enc(r)}">${esc(r)}</a>`).join("")}</div></section>` : ""}`;
+  let pg = 1, first = true;
+  const more = async () => {
+    const mb = $("#mb"); mb.disabled = true;
+    try {
+      const list = await browse(s, pg);
+      if (id !== nav) return;
+      if (first) {
+        first = false; $("#gr").innerHTML = "";
+        feature(list.slice(0, 5), s);
+        if (!list.length) $("#gr").innerHTML = `<p class="status">Daftar belum bisa dimuat. Coba cari judul di kolom atas, atau cek domain Gogoanime di scraper.</p>`;
+      }
+      $("#gr").insertAdjacentHTML("beforeend", list.map(cd).join(""));
+      pg++; mb.disabled = false; if (!list.length) mb.hidden = true;
+    } catch (e) { if (id === nav) { $("#gr").innerHTML = fail(e); mb.hidden = true; $("#hero").innerHTML = ""; } }
+  };
+  $("#mb").onclick = more; more();
+}
+
+/* ---------- Pengaturan ---------- */
+function settingsPage() {
+  ambient("");
+  const c = cfg();
+  const sw = (k, t) => `<label class="srow"><span>${t}</span><input type="checkbox" data-k="${k}" ${c[k] ? "checked" : ""}></label>`;
+  const sl = (k, t, min, max) => `<label class="srow"><span>${t}</span><input type="range" data-k="${k}" min="${min}" max="${max}" value="${c[k]}"></label>`;
+  const se = (k, t, o) => `<label class="srow"><span>${t}</span><select data-k="${k}">${o.map(([v, l]) => `<option value="${v}" ${String(c[k]) === String(v) ? "selected" : ""}>${l}</option>`).join("")}</select></label>`;
+  app.innerHTML = `<h1 class="sec" style="font-size:1.8rem">Pengaturan</h1><div class="set">
+    <section class="panel glass"><h2>Tampilan</h2>${se("theme", "Tema", [["dark", "Gelap"], ["light", "Terang"]])}</section>
+    <section class="panel glass"><h2>Subtitle</h2>${se("sub", "Bahasa bawaan", [["off", "Mati"], ...LANGS])}${sl("subSize", "Ukuran huruf", 14, 44)}
+      <label class="srow"><span>Warna teks</span><input type="color" data-k="subColor" value="${c.subColor}"></label>${sl("subBg", "Latar teks", 0, 100)}${sl("subPos", "Jarak dari bawah", 2, 40)}
+      <div class="pv" id="pv"><div class="subs"><span>Contoh teks subtitle</span></div></div>
+      <p class="tm">Selain English, subtitle adalah terjemahan otomatis dari subtitle Inggris.</p></section>
+    <section class="panel glass"><h2>Pemutar</h2>${se("quality", "Kualitas bawaan", [["auto", "Auto"], ["360", "360p"], ["480", "480p"], ["720", "720p"], ["1080", "1080p"]])}${se("speed", "Kecepatan bawaan", [0.5, 0.75, 1, 1.25, 1.5, 2].map((x) => [x, x + "x"]))}
+      ${sw("autoplay", "Putar otomatis saat episode dibuka")}${sw("auto", "Lanjut ke episode berikutnya otomatis")}${sw("skipIntro", "Lewati intro otomatis (jika tersedia)")}</section>
+    <section class="panel glass"><h2>Privasi dan data</h2>${sw("hideHist", "Sembunyikan riwayat tontonan")}
+      <div class="srow"><span>Hapus riwayat dan posisi tonton</span><button class="btn" id="ch">Hapus</button></div>
+      <div class="srow"><span>Hapus semua data di perangkat ini</span><button class="btn" id="ca">Hapus semua</button></div></section></div>`;
+  const apply = () => {
+    const n = cfg(), pv = $("#pv");
+    document.documentElement.dataset.theme = n.theme;
+    pv.style.setProperty("--fs", n.subSize); pv.style.setProperty("--fc", n.subColor); pv.style.setProperty("--bga", n.subBg / 100); pv.style.setProperty("--pos", n.subPos + "%");
+  };
+  app.querySelectorAll("[data-k]").forEach((el) => {
+    el.oninput = el.onchange = () => {
+      const k = el.dataset.k, v = el.type === "checkbox" ? el.checked : el.type === "range" || k === "speed" ? +el.value : el.value;
+      LS.set("cfg", { ...cfg(), [k]: v }); apply();
+    };
+  });
+  $("#ch").onclick = () => { if (confirm("Hapus riwayat dan posisi tonton?")) { LS.set("hist", []); LS.set("p", {}); } };
+  $("#ca").onclick = () => { if (confirm("Hapus semua data (favorit, riwayat, pengaturan)?")) { Object.keys(localStorage).filter((k) => k.startsWith("kt:")).forEach((k) => localStorage.removeItem(k)); location.reload(); } };
+  apply();
+}
+
+/* ---------- Detail anime ---------- */
+async function animePage(p, id) {
+  const u = p.get("u"), n = p.get("n") || "Anime", i = p.get("i") || "";
+  ambient(i);
+  app.innerHTML = `<p class="status">Memuat episode…</p>`;
+  try {
+    const eps = await episodes(u);
+    if (id !== nav) return;
+    const P = prog(), h = LS.get("hist", []).find((x) => x.a === u);
+    const res = h && eps.find((e) => e.url === h.e);
+    const start = res || eps[0];
+    const list = (f) => eps.filter((e) => e.title.toLowerCase().includes(f)).map((e) => {
+      const x = P[e.url], s = pct(x);
+      return `<a class="ep ${s > 90 ? "seen" : ""}" href="${wHref(e.url, u, n, i)}">${esc(e.title)}${s > 2 && s <= 90 ? `<i style="--w:${s}%"></i>` : ""}</a>`;
+    }).join("") || `<p class="status">Episode tidak ditemukan.</p>`;
+    app.innerHTML = `<section class="detail glass"><div class="pw"><img class="poster" src="${esc(i)}" alt=""></div><div><h1>${esc(n)}</h1><p>${eps.length} episode</p>
+      <div class="acts">${start ? `<a class="btn main" href="${wHref(start.url, u, n, i)}">${res ? "Lanjut " + esc(res.title) : "Mulai nonton"}</a>` : ""}<button class="btn" id="fv"></button></div></div></section>
+      <section class="panel glass"><input class="f" id="ef" placeholder="Cari episode, misalnya 12" aria-label="Cari episode"><div class="eps" id="el">${list("")}</div></section>`;
+    const fv = $("#fv"), setFv = () => (fv.textContent = isFav(u) ? "Hapus dari favorit" : "Simpan ke favorit");
+    setFv();
+    fv.onclick = () => { const f = LS.get("fav", []); LS.set("fav", isFav(u) ? f.filter((x) => x.a !== u) : [{ a: u, n, i }, ...f]); setFv(); };
+    $("#ef").oninput = (e) => ($("#el").innerHTML = list(e.target.value.trim().toLowerCase()));
+  } catch (e) { if (id === nav) app.innerHTML = fail(e); }
+}
+
+/* ---------- Nonton ---------- */
+const IC = {
+  play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+  pause: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>',
+  vol: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 4V5L8 9z"/></svg>',
+  pip: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="12" y="11" width="7" height="5" rx="1" fill="currentColor"/></svg>',
+  fs: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+};
+const fmt = (t) => { t = Math.max(0, t | 0); const h = (t / 3600) | 0, m = ((t % 3600) / 60) | 0, s = t % 60; return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(s).padStart(2, "0"); };
+
+async function watchPage(p, id) {
+  const u = p.get("u"), a = p.get("a") || u, n = p.get("n") || "Anime", i = p.get("i") || "";
+  ambient(i);
+  app.innerHTML = `<p class="status">Menyiapkan video…</p>`;
+  try {
+    const [res, eps] = await Promise.all([api("/api/watch", { url: u }), p.get("a") ? episodes(a).catch(() => []) : []]);
+    if (id !== nav) return;
+    const idx = eps.findIndex((e) => e.url === u), cur = eps[idx], prev = eps[idx - 1], next = eps[idx + 1];
+    const et = cur ? cur.title : res.title, img = i || res.thumbnail;
+    if (!i) ambient(res.thumbnail);
+    document.title = `${et} · ${n}`;
+    const hls = res.sources.find((s) => s.kind === "hls"), subs = (hls && hls.subs) || [], links = res.sources.filter((s) => s.kind === "link");
+    const S = cfg(), P = prog();
+    const nh = (e) => (e ? wHref(e.url, a, n, img) : "#");
+    app.innerHTML = `<div class="wl"><div>
+      <div class="player" id="pl">${hls ? `<video id="v" playsinline></video><div class="subs" id="sbx"></div>
+        <div class="ov glass-wrap" id="nx"><div class="glass"><p>Episode berikutnya dalam <b id="cd">5</b> detik</p><div class="acts" style="justify-content:center"><button class="btn main" id="nxgo">Putar sekarang</button><button class="btn" id="nxno">Batal</button></div></div></div>
+        <div class="ov" id="er"><div class="glass"><p id="ert"></p></div></div>
+        <div class="ctl glass" id="ct"><input type="range" id="sk" min="0" max="1000" value="0" aria-label="Posisi video">
+          <div class="cr"><button class="ib" id="pp" aria-label="Putar atau jeda">${IC.play}</button><button class="ib" id="bk">-10d</button><button class="ib" id="fw">+10d</button><span class="tm" id="tm">0:00 / 0:00</span><span class="sp"></span>
+          <button class="ib" id="in">Lompat intro</button><select id="sd" aria-label="Kecepatan">${[0.5, 0.75, 1, 1.25, 1.5, 2].map((s) => `<option value="${s}" ${s == S.speed ? "selected" : ""}>${s}x</option>`).join("")}</select>${subs.length ? `<select id="sb" aria-label="Subtitle"><option value="off">Sub mati</option>${subs.map((x) => `<option value="${x.code}" ${x.code === S.sub ? "selected" : ""}>${esc(x.label)}</option>`).join("")}</select>` : ""}<select id="ql" aria-label="Kualitas"><option value="-1">Auto</option></select>
+          <button class="ib" id="vb" aria-label="Senyap">${IC.vol}</button><input type="range" id="vol" min="0" max="1" step="0.05" value="${S.vol}" aria-label="Volume"><button class="ib" id="pi" aria-label="Gambar dalam gambar">${IC.pip}</button><button class="ib" id="fs" aria-label="Layar penuh">${IC.fs}</button></div></div>`
+        : `<div class="ov on"><div class="glass"><p>Streaming langsung belum tersedia untuk episode ini.</p><p class="tm">Coba tautan server lain di bawah.</p></div></div>`}</div>
+      <section class="meta glass"><h1>${esc(et)}</h1><p class="tm">${esc(n)}</p>${hls && !subs.length ? '<p class="tm">Video ini tidak membawa subtitle terpisah, jadi sub Indonesia tidak tersedia.</p>' : ""}
+        <div class="acts"><a class="btn" aria-disabled="${!prev}" href="${nh(prev)}">Sebelumnya</a><a class="btn main" id="nl" aria-disabled="${!next}" href="${nh(next)}">Berikutnya</a><a class="btn" href="${aHref(a, n, img)}">Semua episode</a>
+        <label class="tg"><input type="checkbox" id="au" ${S.auto ? "checked" : ""}>Putar otomatis</label></div>
+        ${links.length ? `<div class="links" style="margin-top:14px">${links.map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.label)}</a>`).join("")}</div>` : ""}
+        <p class="kbd">Pintasan: Spasi atau K putar/jeda, J dan L mundur/maju 10 detik, panah kiri/kanan 5 detik, M senyap, F layar penuh, N episode berikutnya. Ketuk dua kali sisi layar untuk lompat 10 detik.</p></section></div>
+      <aside class="panel glass" style="margin:0"><h2 style="font-size:1rem">Episode</h2><div class="eps" id="el" style="grid-template-columns:repeat(auto-fill,minmax(64px,1fr));max-height:70vh">${eps.map((e) => { const s = pct(P[e.url]); return `<a class="ep ${e.url === u ? "cur" : s > 90 ? "seen" : ""}" href="${wHref(e.url, a, n, img)}">${esc(e.title.replace(/^EP(ISODE)?\s*/i, "") || e.title)}${s > 2 && s <= 90 ? `<i style="--w:${s}%"></i>` : ""}</a>`; }).join("") || '<p class="status">Daftar episode tidak tersedia.</p>'}</div></aside></div>`;
+    $("#el .cur")?.scrollIntoView({ block: "nearest" });
+    if (hls) mount(hls.url, { u, a, n, i: img, et, next: next && nh(next), S, subs, intro: hls && hls.intro });
+  } catch (e) { if (id === nav) app.innerHTML = fail(e); }
+}
+
+function mount(src, c) {
+  const v = $("#v"), pl = $("#pl"), sk = $("#sk"), vol = $("#vol"), S = c.S;
+  let h = null, idle, last = 0, tmr, started = false, ct;
+  const store = () => LS.set("cfg", S);
+  const save = () => {
+    if (!v.duration) return;
+    const P = prog(); P[c.u] = { t: v.currentTime, d: v.duration }; LS.set("p", P);
+  };
+  const hist = () => !S.hideHist && LS.set("hist", [{ a: c.a, n: c.n, i: c.i, e: c.u, et: c.et, at: Date.now() }, ...LS.get("hist", []).filter((x) => x.a !== c.a)].slice(0, 30));
+  const seek = (d) => { v.currentTime = Math.min(v.duration || 1e9, Math.max(0, v.currentTime + d)); };
+  const toggle = () => (v.paused ? v.play() : v.pause());
+  const showErr = (m) => { const er = $("#er"); $("#ert").textContent = m; er.hidden = false; er.classList.add("on"); };
+
+  if (Hls.isSupported()) {
+    h = new Hls({ maxBufferLength: 30, enableWebVTT: false, enableCEA708Captions: false, enableIMSC1: false, renderTextTracksNatively: false });
+    h.loadSource(src); h.attachMedia(v);
+    h.on(Hls.Events.MANIFEST_PARSED, () => {
+      $("#ql").innerHTML = '<option value="-1">Auto</option>' + h.levels.map((l, k) => `<option value="${k}">${l.height ? l.height + "p" : "Level " + (k + 1)}</option>`).join("");
+    });
+    h.on(Hls.Events.ERROR, (_, d) => { if (d.fatal) showErr("Video gagal dimuat. Tautan streaming berlaku singkat, muat ulang halaman ini."); });
+  } else if (v.canPlayType("application/vnd.apple.mpegurl")) v.src = src;
+  else showErr("Browser ini tidak mendukung streaming HLS.");
+
+  v.volume = S.vol; v.playbackRate = S.speed;
+  const box = $("#sbx");
+  const sty = () => { pl.style.setProperty("--fs", S.subSize); pl.style.setProperty("--fc", S.subColor); pl.style.setProperty("--bga", S.subBg / 100); pl.style.setProperty("--pos", S.subPos + "%"); };
+  sty();
+  c.subs.forEach((x) => { const t = document.createElement("track"); t.kind = "subtitles"; t.id = "kt-" + x.code; t.label = x.label; t.src = x.url; v.appendChild(t); });
+  v.textTracks.addEventListener("addtrack", (e) => { if (!String(e.track.id).startsWith("kt-")) e.track.mode = "disabled"; });
+  const setSub = (code) => {
+    box.textContent = "";
+    [...v.textTracks].forEach((t) => { t.oncuechange = null; t.mode = "disabled"; });
+    S.sub = code; store();
+    const t = [...v.textTracks].find((x) => x.id === "kt-" + code);
+    if (!t) return;
+    t.mode = "hidden";
+    t.oncuechange = () => {
+      const cs = [...(t.activeCues || [])].map((q) => q.text.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim()).filter(Boolean);
+      const sp = document.createElement("span"); sp.textContent = cs.join("\n");
+      box.replaceChildren(...(cs.length ? [sp] : []));
+    };
+  };
+  const sb = $("#sb");
+  if (sb) { setSub(S.sub); sb.onchange = () => setSub(sb.value); }
+  if (h && S.quality !== "auto") h.on(Hls.Events.MANIFEST_PARSED, () => {
+    let best = -1; h.levels.forEach((l, k) => { if (l.height && l.height <= +S.quality && (best < 0 || l.height > h.levels[best].height)) best = k; });
+    if (best >= 0) { h.currentLevel = best; $("#ql").value = best; }
+  });
+  let skipped = false;
+  v.addEventListener("timeupdate", () => {
+    const n = c.intro;
+    if (S.skipIntro && !skipped && n && n.end > n.start && v.currentTime >= n.start && v.currentTime < n.end - 1) { skipped = true; v.currentTime = n.end; }
+  });
+  if (S.autoplay) v.addEventListener("loadedmetadata", () => v.play().catch(() => {}), { once: true });
+  v.addEventListener("loadedmetadata", () => {
+    const x = prog()[c.u];
+    if (x && x.t > 10 && x.t < v.duration - 30) v.currentTime = x.t;
+    v.playbackRate = S.speed;
+  });
+  v.addEventListener("play", () => { $("#pp").innerHTML = IC.pause; if (!started) { started = true; hist(); } });
+  v.addEventListener("pause", () => { $("#pp").innerHTML = IC.play; save(); });
+  v.addEventListener("timeupdate", () => {
+    const d = v.duration || 0;
+    $("#tm").textContent = fmt(v.currentTime) + " / " + fmt(d);
+    if (d) {
+      const b = v.buffered.length ? (v.buffered.end(v.buffered.length - 1) / d) * 100 : 0, pp = (v.currentTime / d) * 100;
+      sk.value = (pp * 10) | 0;
+      sk.style.setProperty("--tr", `linear-gradient(90deg,var(--accent) ${pp}%,rgba(255,255,255,.5) ${pp}%,rgba(255,255,255,.5) ${b}%,rgba(255,255,255,.22) ${b}%)`);
+    }
+    if (Date.now() - last > 5000) { last = Date.now(); save(); }
+  });
+  v.addEventListener("ended", () => {
+    const P = prog(); P[c.u] = { t: v.duration, d: v.duration }; LS.set("p", P);
+    if (!c.next || !S.auto) return;
+    let s = 5; $("#cd").textContent = s; $("#nx").classList.add("on");
+    tmr = setInterval(() => { $("#cd").textContent = --s; if (s <= 0) { clearInterval(tmr); location.hash = c.next; } }, 1000);
+  });
+  $("#nxgo").onclick = () => { location.hash = c.next || "#/"; };
+  $("#nxno").onclick = () => { clearInterval(tmr); $("#nx").classList.remove("on"); };
+
+  sk.oninput = () => { if (v.duration) v.currentTime = (sk.value / 1000) * v.duration; };
+  $("#pp").onclick = toggle; $("#bk").onclick = () => seek(-10); $("#fw").onclick = () => seek(10); $("#in").onclick = () => (c.intro && c.intro.end > v.currentTime ? (v.currentTime = c.intro.end) : seek(85));
+  $("#sd").onchange = (e) => { S.speed = +e.target.value; v.playbackRate = S.speed; store(); };
+  $("#ql").onchange = (e) => { if (h) h.currentLevel = +e.target.value; };
+  vol.oninput = () => { v.muted = false; v.volume = +vol.value; S.vol = v.volume; store(); };
+  $("#vb").onclick = () => { v.muted = !v.muted; vol.value = v.muted ? 0 : v.volume; };
+  $("#pi").onclick = () => (document.pictureInPictureElement ? document.exitPictureInPicture() : v.requestPictureInPicture?.().catch(() => {}));
+  const fs = () => (document.fullscreenElement ? document.exitFullscreen() : pl.requestFullscreen?.());
+  $("#fs").onclick = fs;
+  $("#au").onchange = (e) => { S.auto = e.target.checked; store(); };
+
+  v.addEventListener("click", () => { clearTimeout(ct); ct = setTimeout(toggle, 230); });
+  v.addEventListener("dblclick", (e) => { clearTimeout(ct); const r = v.getBoundingClientRect(); seek(e.clientX - r.left < r.width / 2 ? -10 : 10); });
+  const wake = () => { pl.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => !v.paused && pl.classList.add("idle"), 3000); };
+  ["mousemove", "touchstart", "keydown"].forEach((ev) => pl.addEventListener(ev, wake));
+
+  const key = (e) => {
+    if (/INPUT|SELECT|TEXTAREA/.test(e.target.tagName) && e.target.type !== "range") return;
+    const k = e.key.toLowerCase(), m = { " ": toggle, k: toggle, j: () => seek(-10), l: () => seek(10), arrowleft: () => seek(-5), arrowright: () => seek(5), m: () => $("#vb").click(), f: fs, n: () => c.next && (location.hash = c.next),
+      arrowup: () => { v.volume = Math.min(1, v.volume + 0.05); vol.value = v.volume; }, arrowdown: () => { v.volume = Math.max(0, v.volume - 0.05); vol.value = v.volume; } };
+    if (m[k]) { e.preventDefault(); m[k](); wake(); }
+  };
+  addEventListener("keydown", key);
+  cleanup = () => { save(); removeEventListener("keydown", key); clearInterval(tmr); clearTimeout(idle); if (h) h.destroy(); v.removeAttribute("src"); v.load(); };
+}
+
+function route() {
+  const id = ++nav;
+  if (cleanup) { cleanup(); cleanup = null; }
+  document.title = "Anime Id";
+  const [path, q = ""] = (location.hash.slice(1) || "/").split("?");
+  window.scrollTo(0, 0);
+  (path === "/anime" ? animePage : path === "/watch" ? watchPage : path === "/settings" ? settingsPage : home)(new URLSearchParams(q), id);
+}
+document.documentElement.dataset.theme = cfg().theme;
+addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>
